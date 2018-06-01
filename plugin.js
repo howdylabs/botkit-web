@@ -10,7 +10,9 @@ module.exports = function(botkit) {
             url: '/chat',
             method: 'get',
             handler: function(req, res) {
-                var relativePath = path.relative(botkit.LIB_PATH + '/views', __dirname + '/views');
+                var relativePath = path.relative(botkit.LIB_PATH + '/../views', __dirname + '/views');
+                console.log('between', botkit.LIB_PATH+'/../views', 'AND', __dirname+'/views');
+                console.log('relativePath', relativePath);
                 res.render(relativePath + '/chat');
             }
         }],
