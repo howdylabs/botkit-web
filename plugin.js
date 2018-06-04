@@ -161,9 +161,9 @@ module.exports = function(botkit) {
                             resp.to = src.user;
 
                             if (resp.typing || resp.typingDelay || botkit.config.replyWithTyping) {
-                                return bot.replyWithTyping(src, resp, cb);
+                                return bot.replyWithTyping(src, resp);
                             } else {
-                                return bot.say(resp, cb);
+                                return bot.say(resp);
                             }
                         };
                     }
