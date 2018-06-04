@@ -160,7 +160,7 @@ module.exports = function(botkit) {
                             resp.channel = src.channel;
                             resp.to = src.user;
 
-                            if (resp.typing || resp.typingDelay || controller.config.replyWithTyping) {
+                            if (resp.typing || resp.typingDelay || botkit.config.replyWithTyping) {
                                 return bot.replyWithTyping(src, resp, cb);
                             } else {
                                 return bot.say(resp, cb);
