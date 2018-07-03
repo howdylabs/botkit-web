@@ -220,8 +220,31 @@ var Botkit = {
   clearReplies: function() {
     this.replies.innerHTML = '';
   },
-  quickReply: function(payload) {
-    this.send(payload);
+  quickReply: function(reply,e) {
+    var that = this;
+    if (e) e.preventDefault();
+
+    var message = {
+      type: 'outgoing',
+      text: reply.title,
+    };
+
+    this.clearReplies();
+    that.renderMessage(message);
+
+    that.deliverMessage({
+      type: 'message',
+      text: reply.title,
+      payload: reply.payload,
+      user: this.guid,
+      channel: this.options.use_sockets ? 'socket' : 'webhook'
+    });
+
+    this.input.value = '';
+
+    this.trigger('sent', message);
+
+    return false;
   },
   focus: function() {
     this.input.focus();
@@ -414,7 +437,7 @@ var Botkit = {
             el.href = '#';
 
             el.onclick = function() {
-              that.quickReply(reply.payload);
+              that.quickReply(reply);
             }
 
             li.appendChild(el);
@@ -447,9 +470,11 @@ var Botkit = {
     that.on('history_loaded', function(history) {
       if (history) {
         for (var m = 0; m < history.length; m++) {
-          that.renderMessage({
-            text: history[m].text,
-            type: history[m].type == 'message_received' ? 'outgoing' : 'incoming', // set appropriate CSS class
+          that.trigger('message',{
+            text: history[m].message.displayed_text || history[m].message.text,
+            type: history[m].fromBot ? 'incoming' : 'outgoing', // set appropriate CSS class
+            quick_replies: history[m].message.quick_replies,
+            files: history[m].message.files,
           });
         }
       }

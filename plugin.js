@@ -1,5 +1,3 @@
-var express = require('express');
-var path = require('path');
 var WebSocket = require('ws');
 
 module.exports = function(botkit) {
@@ -10,14 +8,13 @@ module.exports = function(botkit) {
             url: '/chat',
             method: 'get',
             handler: function(req, res) {
-                var relativePath = path.relative(botkit.LIB_PATH + '/../views', __dirname + '/views');
-                res.render(relativePath + '/chat');
+                res.render(botkit.localView(__dirname + '/views/chat'));
             }
         }],
         menu: [{
             title: 'Chat',
             url: '/chat',
-            icon: '💬',
+            icon: '<img src="/icons/chat.png"/>',
         }],
         middleware: {
             send: [
@@ -175,8 +172,7 @@ module.exports = function(botkit) {
         init: function(botkit) {
 
             // make bundled assets available
-            botkit.webserver.use("/plugins/chat", express.static(__dirname + "/public"));
-
+            botkit.publicFolder("/plugins/chat", __dirname + "/public");
             openSocketServer(botkit.httpserver);
 
         }
